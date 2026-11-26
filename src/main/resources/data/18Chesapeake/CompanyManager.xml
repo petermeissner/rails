@@ -33,10 +33,10 @@
 		<Blocking hex="H2,I3"/>
 		<SpecialProperties>
 			<SpecialProperty condition="ifOwnedByCompany" when="tileLayingStep" class="net.sf.rails.game.special.SpecialSingleTileLay">
-				<SpecialSingleTileLay colour="yellow" location="H2" extra="yes" free="yes" tiles="8,9" constraints="connected" neighbour="I3" />
+				<SpecialSingleTileLay colour="yellow" location="H2" extra="yes" free="yes" tiles="8,9" neighbours="I3" />
 			</SpecialProperty>
 			<SpecialProperty condition="ifOwnedByCompany" when="tileLayingStep" class="net.sf.rails.game.special.SpecialSingleTileLay">
-				<SpecialSingleTileLay colour="yellow" location="I3" extra="yes" free="yes" tiles="8,9" constraints="connected" neighbour="H2" />
+				<SpecialSingleTileLay colour="yellow" location="I3" extra="yes" free="yes" tiles="8,9" neighbours="H2" />
 			</SpecialProperty>
 		</SpecialProperties>
 	</Company>
@@ -45,10 +45,10 @@
 		<Blocking hex="F4,G5"/>
 		<SpecialProperties>
 			<SpecialProperty condition="ifOwnedByCompany" when="tileLayingStep" class="net.sf.rails.game.special.SpecialSingleTileLay">
-				<SpecialSingleTileLay colour="yellow" location="F4" extra="yes" free="yes" tiles="8,9" constraints="connected" neighbour="G5" />
+				<SpecialSingleTileLay colour="yellow" location="F4" extra="yes" free="yes" tiles="8,9" neighbours="G5" />
 			</SpecialProperty>
 			<SpecialProperty condition="ifOwnedByCompany" when="tileLayingStep" class="net.sf.rails.game.special.SpecialSingleTileLay">
-				<SpecialSingleTileLay colour="yellow" location="G5" extra="yes" free="yes" tiles="8,9" constraints="connected" neighbour="F4" />
+				<SpecialSingleTileLay colour="yellow" location="G5" extra="yes" free="yes" tiles="8,9" neighbours="F4" />
 			</SpecialProperty>
 		</SpecialProperties>
 	</Company>

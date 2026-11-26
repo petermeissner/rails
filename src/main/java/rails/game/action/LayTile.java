@@ -157,6 +157,10 @@ public class LayTile extends PossibleORAction implements Comparable<LayTile> {
         if (tile != null) {
             tiles = new ArrayList<>();
             tiles.add(tile);
+        } else if (specialProperty.getTiles() != null) {
+            // Several tiles to choose from. setTiles() also records their IDs, so
+            // that a reloaded action still matches the offered one.
+            setTiles(new ArrayList<>(specialProperty.getTiles()));
         }
     }
 

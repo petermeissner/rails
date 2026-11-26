@@ -3891,6 +3891,10 @@ public class OperatingRound extends Round implements Observer {
             stl = action.getSpecialProperty();
             if (stl != null) {
                 extra = stl.isExtra();
+                if (!stl.allowsTileLay(hex, tile, orientation)) {
+                    errMsg = LocalText.getText("TileMayNotBeLaidInHex", tile.toText(), hex.getId());
+                    break;
+                }
             }
             if (!extra && !validateNormalTileLay(tile)) {
                 errMsg = LocalText.getText("NumberOfNormalTileLaysExceeded", tile.getColourText());
