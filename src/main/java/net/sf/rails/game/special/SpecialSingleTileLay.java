@@ -14,6 +14,9 @@ public class SpecialSingleTileLay extends SpecialTileLay {
 
     protected List<MapHex> neighbouringHexes = null;
     protected String neighbouringHexesCode =null;
+    /** Optional, instead of a single tile: several tiles to choose from */
+    private String tileIds = null;
+    private List<Tile> tiles = null;
 
     /**
      * Used by Configure (via reflection) only
@@ -41,6 +44,7 @@ public class SpecialSingleTileLay extends SpecialTileLay {
             throw new ConfigurationException("SpecialSingleTileLay: location missing");
 
         tileId = tileLayTag.getAttributeAsString("tile", null);
+        tileIds = tileLayTag.getAttributeAsString("tiles", null);
 
         String coloursString = tileLayTag.getAttributeAsString("colour");
         if (Util.hasValue(coloursString)) {
@@ -55,11 +59,11 @@ public class SpecialSingleTileLay extends SpecialTileLay {
         discount = tileLayTag.getAttributeAsInteger("discount", discount);
 
         neighbouringHexesCode = tileLayTag.getAttributeAsString("neighbours", null);
-        // If neighbours is defined the subsequent tile lays need to be connected to the first tile lay.
+        // If neighbours is defined, the tile must have track to the side facing each of them.
 
-        if (tileId != null) {
+        if (tileId != null || tileIds != null) {
             description = LocalText.getText("LayNamedTileInfo",
-                    tileId,
+                    tileId != null ? tileId : tileIds,
                     name != null ? name : "",
                             locationCodes,
                             (extra ? LocalText.getText("extra"):LocalText.getText("notExtra")),
@@ -93,6 +97,15 @@ public class SpecialSingleTileLay extends SpecialTileLay {
         if (tileId != null) {
             tile = tmgr.getTile(tileId);
         }
+        if (tileIds != null) {
+            tiles = new ArrayList<>();
+            for (String id : tileIds.split(",")) {
+                Tile t = tmgr.getTile(id);
+                if (t == null)
+                    throw new ConfigurationException("Tile " + id + " does not exist");
+                tiles.add(t);
+            }
+        }
 
         if (locationCodes != null
                 && !locationCodes.equalsIgnoreCase("all")) {
@@ -116,6 +129,30 @@ public class SpecialSingleTileLay extends SpecialTileLay {
             }
         }
 
+    }
+
+    @Override
+    public List<Tile> getTiles() {
+        return tiles;
+    }
+
+    @Override
+    public boolean allowsTileLay(MapHex hex, Tile newTile, int orientation) {
+        if (tiles != null && !tiles.contains(newTile)) return false;
+        if (neighbouringHexes == null) return true;
+
+        MapManager mapManager = hex.getRoot().getMapManager();
+        HexSidesSet trackSides = hex.getTrackSides(newTile, orientation);
+        for (MapHex neighbour : neighbouringHexes) {
+            boolean reached = false;
+            for (HexSide side : HexSide.all()) {
+                if (neighbour.equals(mapManager.getNeighbour(hex, side)) && trackSides.get(side)) {
+                    reached = true;
+                }
+            }
+            if (!reached) return false;
+        }
+        return true;
     }
 
     @Override

@@ -3891,6 +3891,10 @@ public class OperatingRound extends Round implements Observer {
             stl = action.getSpecialProperty();
             if (stl != null) {
                 extra = stl.isExtra();
+                if (!stl.allowsTileLay(hex, tile, orientation)) {
+                    errMsg = LocalText.getText("TileMayNotBeLaidInHex", tile.toText(), hex.getId());
+                    break;
+                }
             }
             if (!extra && !validateNormalTileLay(tile)) {
                 errMsg = LocalText.getText("NumberOfNormalTileLaysExceeded", tile.getColourText());
@@ -3961,6 +3965,7 @@ public class OperatingRound extends Round implements Observer {
                 registerNormalTileLay(tile);
                 normalTileLaidThisTurn.set(true);
             }
+            afterTileLay(action);
         } 
 
         // - for PfB / Extra Lays / Second Tile ---
@@ -3978,11 +3983,29 @@ public class OperatingRound extends Round implements Observer {
             return true;
         }
 
+        if (mayLayExtraTileAfterNormalLay()) {
+            return true;
+        }
+
         // This was the last normal/extra lay. Advance the step.
 
         nextStep();
         setPossibleActions(); // Regenerate actions immediately for the next step (LAY_TOKEN)
         return true;
+    }
+
+    /**
+     * Stub, can be overridden to react to a tile lay before the step is advanced
+     */
+    protected void afterTileLay(LayTile action) {
+    }
+
+    /**
+     * Stub, can be overridden to keep the company in the tile laying step after its
+     * last normal tile lay, so that it can still use an extra tile lay
+     */
+    protected boolean mayLayExtraTileAfterNormalLay() {
+        return false;
     }
 
     /**

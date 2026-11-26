@@ -144,6 +144,18 @@ public class TileHexUpgrade extends HexUpgrade implements Iterable<HexSide> {
             rotations = upgrade.getAllowedRotations(null, invalidSides,
                     modelHex.getCurrentTileRotation(), stations, restrictive);
         }
+        // a special property may restrict the orientations further
+        SpecialTileLay special = action.getSpecialProperty();
+        if (special != null) {
+            HexSidesSet.Builder allowed = HexSidesSet.builder();
+            for (HexSide rotation : rotations) {
+                if (special.allowsTileLay(modelHex, upgrade.getTargetTile(),
+                        rotation.getTrackPointNumber())) {
+                    allowed.set(rotation);
+                }
+            }
+            rotations = allowed.build();
+        }
         // initialize selected Rotation
         selectedRotation = rotations.getNext(HexSide.defaultRotation());
     }

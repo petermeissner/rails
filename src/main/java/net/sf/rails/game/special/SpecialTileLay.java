@@ -85,6 +85,21 @@ public abstract class SpecialTileLay extends SpecialProperty {
         return tileColours;
     }
 
+    /**
+     * @return The tiles to choose from if the property names several of them,
+     * otherwise null (a single named tile is returned by getTile())
+     */
+    public List<Tile> getTiles() {
+        return null;
+    }
+
+    /**
+     * @return True if this property allows laying the tile on the hex in this orientation
+     */
+    public boolean allowsTileLay(MapHex hex, Tile newTile, int orientation) {
+        return true;
+    }
+
     @Override
 	public abstract String toText();
 
